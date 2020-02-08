@@ -11,14 +11,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(bodyParser.json())
 
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1qaz2wsx',
-    database: 'diybiller'
-});
+// var connection = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     password: '1qaz2wsx',
+//     database: 'diybiller'
+// });
 
-connection.connect()
+// connection.connect()
 
 
 app.use('/user', user_routes)
@@ -29,4 +29,4 @@ app.get('/', (req, res) => {
     res.send('Works')
 })
 
-app.listen(3000, () => console.log('Port Up.'))
+app.listen(4000, () => console.log('Port Up.'))
