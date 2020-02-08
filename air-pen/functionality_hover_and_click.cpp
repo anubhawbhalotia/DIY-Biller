@@ -141,6 +141,94 @@ void mouseClick(int button)
 	
 	XCloseDisplay(display);
 }
+void mouseClickPress(int button)
+{
+	Display *display = XOpenDisplay(NULL);
+
+	XEvent event;
+	
+	if(display == NULL)
+	{
+		fprintf(stderr, "Errore nell'apertura del Display !!!\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	memset(&event, 0x00, sizeof(event));
+	
+	event.type = ButtonPress;
+	event.xbutton.button = button;
+	event.xbutton.same_screen = True;
+	
+	XQueryPointer(display, RootWindow(display, DefaultScreen(display)), &event.xbutton.root, &event.xbutton.window, &event.xbutton.x_root, &event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y, &event.xbutton.state);
+	
+	event.xbutton.subwindow = event.xbutton.window;
+	
+	while(event.xbutton.subwindow)
+	{
+		event.xbutton.window = event.xbutton.subwindow;
+		
+		XQueryPointer(display, event.xbutton.window, &event.xbutton.root, &event.xbutton.subwindow, &event.xbutton.x_root, &event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y, &event.xbutton.state);
+	}
+	
+	if(XSendEvent(display, PointerWindow, True, 0xfff, &event) == 0) fprintf(stderr, "Error\n");
+	
+	XFlush(display);
+	
+	usleep(100000);
+	
+	// event.type = ButtonRelease;
+	// event.xbutton.state = 0x100;
+	
+	if(XSendEvent(display, PointerWindow, True, 0xfff, &event) == 0) fprintf(stderr, "Error\n");
+	
+	XFlush(display);
+	
+	XCloseDisplay(display);
+}
+void mouseClickRelease(int button)
+{
+	Display *display = XOpenDisplay(NULL);
+
+	XEvent event;
+	
+	if(display == NULL)
+	{
+		fprintf(stderr, "Errore nell'apertura del Display !!!\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	memset(&event, 0x00, sizeof(event));
+	
+	event.type = ButtonRelease;
+	event.xbutton.button = button;
+	event.xbutton.same_screen = True;
+	
+	XQueryPointer(display, RootWindow(display, DefaultScreen(display)), &event.xbutton.root, &event.xbutton.window, &event.xbutton.x_root, &event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y, &event.xbutton.state);
+	
+	event.xbutton.subwindow = event.xbutton.window;
+	
+	while(event.xbutton.subwindow)
+	{
+		event.xbutton.window = event.xbutton.subwindow;
+		
+		XQueryPointer(display, event.xbutton.window, &event.xbutton.root, &event.xbutton.subwindow, &event.xbutton.x_root, &event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y, &event.xbutton.state);
+	}
+	
+	if(XSendEvent(display, PointerWindow, True, 0xfff, &event) == 0) fprintf(stderr, "Error\n");
+	
+	XFlush(display);
+	
+	usleep(100000);
+	
+	// event.type = ButtonRelease;
+	// event.xbutton.state = 0x100;
+	
+	if(XSendEvent(display, PointerWindow, True, 0xfff, &event) == 0) fprintf(stderr, "Error\n");
+	
+	XFlush(display);
+	
+	XCloseDisplay(display);
+}
 void markStateChange(int &counter, int mx, int my)
 {
 	counter++;
@@ -170,7 +258,8 @@ int main()
 
 	Display *display = XOpenDisplay(0);
  	Window root = DefaultRootWindow(display);
- 	int mode = 0, counter = 0;
+ 	int mode = 0, counter = 0, x = 0;
+ 	int on = 0, off = 0, d = 0;
 	while(1)
 	{
 		bool bSuccess=cap.read(original);
@@ -184,14 +273,58 @@ int main()
 		scaleMousePoint();
 		mx = j_avg;
 		my = i_avg;
-		if((mx == mx_prev && my == my_prev) || (mx == 0 && my == 0) || 
-			(abs(mx - mx_prev) + abs(my - my_prev) < 10))
+		// lights off
+		if((mx == 0 && my == 0)) 
 		{
-		
+			// switched on -> off
+			if(on)
+			{
+				// cout<<"on = "<<on<<endl;
+				if(on > 4)
+				{
+					d = 0;
+				}
+				else
+				{
+					d++;
+					off++;
+					on = 0;
+					// on_time += on;	
+					continue;
+				}
+			}
+			off++;
+			on = 0;
 		}
-		else
+		// lights on
+		else 
 		{
-			if((abs(mx - mx_prev) + abs(my - my_prev) < 10))
+			// switched off -> on
+			if(off)
+			{
+				// cout<<"off = "<<off<<endl;
+				if(off > 4)
+				{
+					d = 0;
+				}
+				else
+				{
+					d++;
+					on++;
+					off = 0;
+					// off_time += off;
+					vx.push_back(mx);
+					vy.push_back(my);
+					mx_prev = mx;
+					my_prev = my;
+					XWarpPointer(display, None, root, 0, 0, 0, 0, mx, my);
+					continue;
+				}
+			}
+			on++;
+			off = 0;
+			if((mx == mx_prev && my == my_prev) || 
+				(abs(mx - mx_prev) + abs(my - my_prev) < 10))
 			{
 				
 			}
@@ -202,70 +335,125 @@ int main()
 				my_prev = my;
 			}
 		}
-		if(mx == 0 && my == 0)
+		// if(mx == 0 && my == 0)
+		// {
+		// 	if(mode == 1)
+		// 	{
+		// 		counter++;
+		// 	}
+		// 	mode = 0;
+		// }
+		// else
+		// {
+		// 	if(mode == 0)
+		// 	{
+		// 		markStateChange(counter, mx, my);
+		// 	}
+		// 	mode = 1;
+		// }
+
+		// if(counter >= 4)
+		// if(d > 2 && d < 5) //single click
+		// {
+		// 	double x_sum = 0, y_sum = 0;
+		// 	double x_diff = 0, y_diff = 0;
+		// 	for(int i = 0; i < vx.size(); i++)
+		// 	{
+		// 		x_sum += vx[i];
+		// 		y_sum += vy[i];
+		// 	}
+		// 	x_sum /= (double)vx.size();
+		// 	y_sum /= (double)vy.size();
+		// 	for(int i = 0; i < vx.size(); i++)
+		// 	{
+		// 		x_diff += (x_sum - vx[i]);
+		// 		y_diff += (y_sum - vy[i]);
+		// 	}
+		// 	int c = 0;
+		// 	if(abs(x_diff + y_diff) < 2)
+		// 	{
+		// 		for(int i = vx.size() - 1; i >= 0; i--)
+		// 		{
+		// 			if(vx[i] !=0 || vy[i] != 0)
+		// 			{
+		// 				mx = vx[i];
+		// 				my = vy[i];
+		// 				break;
+		// 			}
+		// 		}
+		// 		if(counter > 5)
+		// 		{
+		// 			if(x % 2 == 0)			
+		// 			{
+		// 				x++;
+		// 				mouseClickPress(Button1);
+		// 				cout<<"press"<<endl;
+		// 			}
+		// 			else
+		// 			{
+		// 				x++;
+		// 				mouseClickRelease(Button1);
+		// 				cout<<"release"<<endl;
+		// 			}
+		// 		}
+		// 		else
+		// 		{
+		// 			mouseClickPress(Button1);
+		// 			mouseClickRelease(Button1);
+		// 		}
+		// 		XWarpPointer(display, None, root, 0, 0, 0, 0, mx, my);
+		// 	}
+		// 	vx.clear();
+		// 	vy.clear();
+		// 	counter = 0;
+		// }
+		// if(d)
+		// 	cout<<"d = "<<d<<endl;
+		if(on > 4 || off > 4)
 		{
-			if(mode == 1)
+			if(d >= 3 && d <= 4)
 			{
-				counter++;
-			}
-			mode = 0;
-		}
-		else
-		{
-			if(mode == 0)
-			{
-				markStateChange(counter, mx, my);
-			}
-			mode = 1;
-		}
-		if(counter >= 4)
-		{
-			double x_sum = 0, y_sum = 0;
-			double x_diff = 0, y_diff = 0;
-			for(int i = 0; i < vx.size(); i++)
-			{
-				x_sum += vx[i];
-				y_sum += vy[i];
-			}
-			x_sum /= (double)vx.size();
-			y_sum /= (double)vy.size();
-			for(int i = 0; i < vx.size(); i++)
-			{
-				x_diff += (x_sum - vx[i]);
-				y_diff += (y_sum - vy[i]);
-			}
-			int c = 0;
-			if(abs(x_diff + y_diff) < 2)
-			{
-				for(int i = vx.size() - 1; i >= 0; i--)
+				if(x % 2 == 1)
 				{
-					if(vx[i] !=0 || vy[i] != 0)
-					{
-						mx = vx[i];
-						my = vy[i];
-						break;
-					}
+					mouseClickRelease(Button1);
+					x++;
 				}
-				// mx /= c;
-				// my /= cn				
-				mouseClick(Button1);
-				XWarpPointer(display, None, root, 0, 0, 0, 0, mx, my);
+				else
+				{
+					mouseClick(Button1);
+				}
 			}
-			vx.clear();
-			vy.clear();
-			counter = 0;
+			else if(d >= 5 && d <= 9)
+			{
+				if(x % 2 == 0)
+				{
+					mouseClickPress(Button1);
+					// cout<<x<<" "<<"press"<<endl;
+				}
+				else
+				{
+					mouseClickRelease(Button1);
+					// cout<<x<<" "<<"Release"<<endl;
+				}
+				x++;
+			}
+			d = 0;
 		}
+		// if(d > 7)
+		// {
+		// 	d = 0;
+		// }
 		XFlush(display);
-		usleep(50);
+		// usleep(50);
 		// imshow("blue",spl[0]);
 		// imshow("green", spl[1]);
-		// imshow("red",spl[2]);
+		imshow("red",spl[2]);
 		imshow("canavas",canavas);
 		int keyPress=waitKey(10);
-		if(keyPress==27)//Esc key
-		{
-			initializeMatObject(canavas);
-		}
+		// if(keyPress==27)//Esc key
+		// {
+		// 	initializeMatObject(canavas);
+		// }
 	}
 	XCloseDisplay(display);
 }
