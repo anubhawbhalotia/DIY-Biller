@@ -86,8 +86,8 @@ router.post('/design', validate, (req, res) => {
     }
     */
    console.log(req.body)
-   executeQuery(`update Users set sale_model=${req.body.finalString} where ID=${req.user.ID}`)
-    .then((res, err) => {
+   executeQuery(`update Users set sale_model='${req.body.finalString}' where ID=${req.user.ID}`)
+    .then((result, err) => {
         if(err) {
             throw err;
         }
