@@ -7,7 +7,6 @@ const validate = require('../middleware/validateUser')
 router.post('/add', validate, async (req, res) => {
     /*
     {
-        bill_no: ''
         sales: [
             {
                 item_name: '',
