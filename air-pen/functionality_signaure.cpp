@@ -18,7 +18,7 @@ using namespace cv;
 using namespace std;
 int scalingFactor=1;
 int boundary[4];
-String path="signatures/";
+String path="	";
 Mat original(ROW,COLUMN,CV_8UC3);
 Mat blue(ROW,COLUMN,CV_8UC3);
 Mat green(ROW,COLUMN,CV_8UC3);

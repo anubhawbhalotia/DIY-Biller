@@ -247,7 +247,8 @@ int main()
 					}
 				}
 				// mx /= c;
-				// my /= cn				mouseClick(Button1);
+				// my /= cn				
+				mouseClick(Button1);
 				XWarpPointer(display, None, root, 0, 0, 0, 0, mx, my);
 			}
 			vx.clear();
