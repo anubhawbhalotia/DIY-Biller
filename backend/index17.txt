@@ -1,0 +1,43 @@
+<div style="display:flex"><div style="width: 70%; position: relative;"><div class="drag"><div class="drag-me" style="visibility: hidden;">drag</div><input type="text" placeholder="Address"></div><div class="drag"><div class="drag-me" style="visibility: hidden;">drag</div><input type="text" placeholder="Address"></div><div class="drag"><div class="drag-me" style="visibility: hidden;">drag</div><input type="text" placeholder="Address"></div><div class="drag"><div class="drag-me" style="visibility: hidden;">drag</div><input type="text" placeholder="Address"></div></div><div style="width: 30%; position: relative;"></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script><script>
+            let area = document.querySelector(''.area');
+            area.style.display = "flex";
+            area.style.flexDirection = "column";
+            let elems = document.querySelectorAll('.elem-dimension');
+            let array = Array.from(elems);
+            for(let i=0;i<elems.length;i++){
+                array[i].addEventListener('click',function(event){
+                    let item = event.target.innerText;
+                    let temp = area.innerText;
+                    let node = document.createElement('div');
+                    node.style.width = '100%';
+                    node.style.display = 'flex';
+                    let innerNode = document.createElement('div');
+                    innerNode.style.width = '75%';
+                    innerNode.style.borderRightColor = "black";
+                    innerNode.style.borderRightWidth = "1px"
+                    innerNode.style.borderRightStyle = "solid";
+                    let qty = document.createElement('div');
+                    qty.innerText = '1';
+                    qty.style.width = '25%';
+                    qty.style.borderStyle = 'none';
+                    qty.contentEditable = "true";
+                    let textNode = document.createTextNode(item);
+                    innerNode.appendChild(textNode);
+                    node.append(innerNode)
+                    node.append(qty);
+                    area.appendChild(node);
+                })
+            }
+            let invoice = document.querySelector('.invoice');
+            invoice.addEventListener('click', function(){
+                html2canvas(area,{
+                    onrendered:function(canvas){
+                        var imgData = canvas.toDataURL('image/png');
+                        var doc = new jsPDF('p', 'mm');
+                        doc.addImage(imgData, 'PNG', 20, 20);
+                        doc.save('sample.pdf');
+                    }
+                })
+            })
+        </script>

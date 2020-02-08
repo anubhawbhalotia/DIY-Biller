@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const fs = require('fs')
 
 const executeQuery = require('../middleware/sql_connector')
 const SHA1 = require('../middleware/hash')
@@ -44,6 +45,7 @@ router.post('/signup', async (req, res) => {
                             .then(async (result, err) => {
                                 let userId = result[0].id
                                 console.log('Id of the new User', userId, result)
+                                await executeQuery(`CREATE TABLE Customer_feedback${userId} (bill_no int, feedback enum('Happy', 'Sad'))`) // Happy 1, Sad for -1
                                 await executeQuery(`CREATE TABLE Employee${userId} (ename varchar(100) not null, eage INT, egender ENUM('Male', 'Female', 'Other'), eusername varchar(100) not null, epassword varchar(100) not null, emobile int, eaddress varchar(500), eemail varchar(100), ekyc boolean)`)
                                 await executeQuery(`CREATE TABLE Inventory${userId} (itemId int auto_increment primary key, item_name varchar(200) not null, quantity int default null, purchase_rate float, gst_rate float)`)
                                 await executeQuery(`create table Sale${userId} ( sale_no int auto_increment primary key, bill_no int, time timestamp, itemId int, quantity float, rate float not null, foreign key(itemId) references Inventory${userId} (itemId) )`)
@@ -86,24 +88,28 @@ router.post('/design', validate, (req, res) => {
     }
     */
    console.log(req.body)
-   executeQuery(`update Users set sale_model='${req.body.finalString}' where ID=${req.user.ID}`)
-    .then((result, err) => {
+    fs.writeFile(`index${req.user.ID}.txt`, req.body.finalString, function (err) {
         if(err) {
             throw err;
         }
-        res.send('OK')
+        console.log('Saved')
     })
 })
 
 router.get('/billing_software', validate, (req, res) => {
-    executeQuery(`select sale_model from Users where ID=${req.user.ID}`)
-        .then((result, err) => {
-            if(err) {
-                throw err;
-            }
-            console.log(`Request for Sale_Model ${result[0]}`)
-            res.send(result[0].sale_model)
-        })
+    fs.readFile(`index${req.user.ID}.txt`, function (err, data) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.write(data);
+        res.end();
+    })
+    // executeQuery(`select sale_model from Users where ID=${req.user.ID}`)
+    //     .then((result, err) => {
+    //         if(err) {
+    //             throw err;
+    //         }
+    //         console.log(`Request for Sale_Model ${result[0]}`)
+    //         res.send(result[0].sale_model)
+    //     })
 })
 
 module.exports = router

@@ -47,4 +47,21 @@ router.post('/add', validate, async (req, res) => {
     res.send('OK')
 })
 
+router.post('/customer_feedback', validate, async (req, res) => {
+    let billNumber = await executeQuery(`Select max(bill_no) from Sale${req.user.ID}`)
+    if (billNumber[0]['max(bill_no)'] == null) {
+        res.status(400).send()
+    } else {
+        billNumber = billNumber[0]['max(bill_no)'];
+        let feedback = req.body.customer_feedback == 1 ? 'Sad' : 'Happy';
+        executeQuery(`insert into Customer_feedback${req.user.ID} (bill_no, feedback) values (${billNumber}, ${feedback})`)
+            .then((resu, err) => {
+                if(err) {
+                    throw err;
+                }
+                res.send('OK')
+            })
+    }
+})
+
 module.exports = router
