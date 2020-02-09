@@ -1,5 +1,4 @@
 const express = require('express')
-var mysql = require('mysql');
 var bodyParser = require('body-parser')
 const cors = require('cors');
 
@@ -14,16 +13,6 @@ const employee_routes = require('./routes/employee')
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(bodyParser.json())
-
-// var connection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '1qaz2wsx',
-//     database: 'diybiller'
-// });
-
-// connection.connect()
-
 
 app.use('/user', user_routes)
 app.use('/inventory', inventory_routes)
