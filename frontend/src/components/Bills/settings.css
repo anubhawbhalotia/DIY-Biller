@@ -1,0 +1,54 @@
+.billPane{
+    width:45%;
+    height:100vh;
+    margin-left:auto;
+    background-color: azure;
+    display: flex;
+    flex-direction: column;
+}
+.employee-field{
+    width:100%;
+}
+.employee{
+    display: flex;
+    justify-content: space-around;
+}
+h6{
+    padding:0 1rem;
+    width:50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inventory{
+    display: flex;
+}
+.btn-adjust-inventory{
+    width: 100%;
+}
+.adjust-save-design{
+    height:100%;
+    position: relative;
+}
+.adjust-save-button{
+    position: absolute;
+    bottom:25%;
+    right:35%
+}
+.btn-sm-adjust{
+    width:50%;
+}
+
+.super-adjust{
+    display: flex;
+    flex-direction:row;
+}
+.width1{
+    width:70%;
+    position: relative;
+}
+.width2{
+    width:30%;
+    position: relative;
+}

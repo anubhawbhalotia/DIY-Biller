@@ -1,0 +1,49 @@
+
+.tools{
+    width:100%;
+    background-color:white;
+}
+.card-header{
+    padding:0rem;
+}
+.btn-length{
+    width:100%;
+}
+.sales-body{
+    display: flex;
+    flex-direction: row;
+    width:50%;
+}
+.card-body{
+    padding:0;
+}
+.sales-left{
+    width:100%;
+    display: flex;
+    flex-direction:column;
+    /* padding-top:0.5rem;
+    padding-left:0.25rem; */
+}
+.sales-right{
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    /* padding-top:0.5rem;
+    padding-left:0.25rem; */
+}
+.input-group-text{
+    padding:0.2rem 0.2rem;
+}
+.drag{
+    display:flex;
+    width:20%;
+}
+.drag-me{
+    width:20%;
+    height:100%;
+    background-color: blue;
+}
+
+.width-adjust{
+    width:100%;
+}

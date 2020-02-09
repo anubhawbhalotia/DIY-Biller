@@ -1,0 +1,61 @@
+.InventoryContainer{
+    display: flex;
+    flex-direction: column;
+    height:55vh;
+    padding-top:0.25rem;
+    border-bottom: solid 2.5px white;
+    position: relative;
+}
+.btn-adjust{
+    display: flex;
+    justify-content: center;
+}
+.hide-initially{
+    visibility: hidden;
+}
+.container{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width:100%;
+    height:100%;
+}
+.elem-dimension{
+    height: 10%;
+    padding:1.25rem;
+    margin:0.25rem 0.2rem;
+    background-color: rgb(230, 184, 184);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.form-design{
+    width:100%;
+    position: absolute;
+    top:15%;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+}
+.visibility{
+    visibility: visible;
+}
+.form-elements{
+    display: flex;
+    flex-direction: column;
+    width:75%;
+    height:100%;
+}
+.submit-adjust{
+    margin:1rem;
+}
+.adjust-del-btn{
+    position: absolute;
+    top:0;
+    right:0;
+}
+
+.adjust-width-elem{
+    width:10%;
+}

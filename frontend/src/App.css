@@ -1,0 +1,19 @@
+.ToolsInventory{
+    width:20%;
+    height:100vh;
+    background-color:rgb(255, 254, 221);
+}
+.App{
+    display: flex;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;  
+}
+
+.homePage {
+    display: flex;
+    /* justify-content: space-around;  */
+    align-items: center;
+}

@@ -1,0 +1,37 @@
+body {
+  background: url("repeated-square.png");
+  /* background-size: cover; */
+}
+
+.heading {
+  margin-top: 50px;
+  margin-bottom: 80px;
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: bolder;
+}
+
+.heading h1 {
+  font-size: 60px;
+}
+
+.heading h2 {
+  font-size: 40px;
+}
+
+.btn-0 {
+  margin: 5px;
+  background: dodgerblue;
+  width: 30%;
+  border-radius: 15px;
+  color: white;
+  font-size: 40px;
+  min-height: 100px;
+}
+
+.sign-out {
+  background: dodgerblue;
+  /* width: 25%; */
+  color: white;
+  border: 1px solid rgb(10, 10, 10);
+  /* font-size: 15px; */
+}
